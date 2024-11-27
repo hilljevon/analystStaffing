@@ -38,7 +38,6 @@ import { Calendar } from "../ui/calendar"
 const formSchema = z.object({
     cmCount: z.number().gte(10).lte(30),
     cmaCount: z.number().gte(1).lte(10),
-    analystAD: z.number(),
     analystScheduled: z.number().gte(12).lte(40),
     analystNeeded: z.number(),
     analystUsed: z.number(),
@@ -55,13 +54,13 @@ export default function MainComponent() {
             analystScheduled: 0,
             analystNeeded: 5,
             analystUsed: 0,
-            analystAD: 5
+
         }
     })
     // create a new sum value for analystsNeeded
     const handleInputChange = () => {
-        const { analystAD, analystScheduled, cmCount, cmaCount } = form.getValues()
-        const newSum = analystAD + cmCount + cmaCount - analystScheduled
+        const { analystScheduled, cmCount, cmaCount } = form.getValues()
+        const newSum = cmCount + cmaCount - analystScheduled
         form.setValue("analystNeeded", newSum)
     }
     function onSubmit(values: z.infer<typeof formSchema>) {
@@ -70,10 +69,11 @@ export default function MainComponent() {
 
     return (
         <div
-            className="relative hidden flex-col items-start gap-8 md:flex"
+            className="relative hidden flex-col items-start gap-4 md:flex"
         >
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="grid w-full items-start gap-6">
+                    {/* Case Managers Fieldset  */}
                     <fieldset className="grid gap-6 rounded-lg border p-4">
                         <legend className="-ml-1 px-1 text-sm font-medium">Case Managers</legend>
                         {/* DATE FORM FORM */}
@@ -170,11 +170,12 @@ export default function MainComponent() {
                             </div>
                         </div>
                     </fieldset>
+                    {/* Scheduled Analysts Fieldset */}
                     <fieldset className="grid gap-6 rounded-lg border p-4">
                         <legend className="-ml-1 px-1 text-sm font-medium">Analysts</legend>
                         <div className="grid grid-cols-2 gap-3">
-                            {/* SCHEUDLED ANALYSTS FORM */}
-                            <div className="col-span-1 grid gap-3">
+                            {/* SCHEDULED ANALYSTS FORM */}
+                            <div className="col-span-full grid gap-3">
                                 <FormField
                                     control={form.control}
                                     name="analystScheduled"
@@ -199,88 +200,40 @@ export default function MainComponent() {
                                     )}
                                 />
                             </div>
-                            {/* AD ANALYSTS FORM */}
-                            <div className="col-span-1 grid gap-3">
-                                <FormField
-                                    control={form.control}
-                                    name="analystAD"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>AD</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="0"
-                                                    onFocus={(event) => event.target.select()}
-                                                    {...field}
-                                                    onChange={event => {
-                                                        field.onChange(+event.target.value)
-                                                        handleInputChange()
-                                                    }}
-                                                />
-                                            </FormControl>
-                                            <FormDescription>AD + Board + NT</FormDescription>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            {/* ANALYSTS NEEDED (CALCULATED) */}
-                            <div className="col-span-2 grid gap-3">
-                                <FormField
-                                    control={form.control}
-                                    name="analystNeeded"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Needed</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    readOnly
-                                                    placeholder="0"
-                                                    {...field}
-                                                    onChange={event => {
-                                                        field.onChange(+event.target.value)
-                                                        handleInputChange()
-                                                    }}
-                                                />
-                                            </FormControl>
-                                            <FormDescription>OT Analysts needed.</FormDescription>
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            {/* ANALYSTS USED */}
-                            <div className="col-span-2 grid gap-3">
-                                <FormField
-                                    control={form.control}
-                                    name="analystUsed"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Used</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="0"
-                                                    onFocus={(event) => event.target.select()}
-                                                    {...field}
-                                                    onChange={event => {
-                                                        field.onChange(+event.target.value)
-                                                        handleInputChange()
-                                                    }}
-                                                />
-                                            </FormControl>
-                                            <FormDescription>Total analysts scheduled.</FormDescription>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            <div className="col-span-full grid gap-3">
-                                <Button type="submit" variant={"secondary"}>
-                                    Submit
-                                </Button>
-                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset className="grid gap-6 rounded-lg border p-4">
+                        <legend className="-ml-1 px-1 text-sm font-medium">OT</legend>
+                        {/* ANALYSTS NEEDED (CALCULATED) */}
+                        <div className="col-span-2 grid gap-3">
+                            <FormField
+                                control={form.control}
+                                name="analystNeeded"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Needed</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                readOnly
+                                                placeholder="0"
+                                                {...field}
+                                                onChange={event => {
+                                                    field.onChange(+event.target.value)
+                                                    handleInputChange()
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormDescription>OT Analysts needed.</FormDescription>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        {/* SUBMISSION BUTTON */}
+                        <div className="col-span-full grid gap-3">
+                            <Button type="submit" variant={"secondary"}>
+                                Submit
+                            </Button>
                         </div>
                     </fieldset>
                 </form>
