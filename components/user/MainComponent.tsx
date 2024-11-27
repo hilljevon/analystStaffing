@@ -66,7 +66,6 @@ export default function MainComponent() {
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Values", values)
     }
-
     return (
         <div
             className="relative hidden flex-col items-start gap-4 md:flex"
