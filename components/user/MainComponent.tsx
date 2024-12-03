@@ -33,33 +33,46 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { Calendar } from "../ui/calendar"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 const formSchema = z.object({
-    ccrCM: z.number().gte(-1).lte(50),
-    trainingCM: z.number().gte(-1).lte(50),
-    refCM: z.number().gte(-1).lte(50),
-    scanCM: z.number().gte(-1).lte(50),
-    nsCM: z.number().gte(-1).lte(50),
-    dcpCMA: z.number().gte(-1).lte(50),
-    refCMA: z.number().gte(-1).lte(50),
-    ooaCMA: z.number().gte(-1).lte(50),
-    ccrAnalysts: z.number().gte(-1).lte(50),
-    ooaAnalysts: z.number().gte(-1).lte(50),
-    trainingAnalysts: z.number().gte(-1).lte(50),
-    refAnalysts: z.number().gte(-1).lte(50),
-    dcpAnalysts: z.number().gte(-1).lte(50),
-    scanAnalysts: z.number().gte(-1).lte(50),
-    adAnalysts: z.number().gte(-1).lte(50),
-    dctAnalysts: z.number().gte(-1).lte(50),
-    stabilityAnalysts: z.number().gte(-1).lte(50),
-    ntAnalysts: z.number().gte(-1).lte(50),
-    nsAnalysts: z.number().gte(-1).lte(50),
-    analystNeeded: z.number().gte(-1).lte(50),
-    analystUsed: z.number().gte(-1).lte(50),
+    ccrCM: z.number().gte(-1).lte(30),
+    trainingCM: z.number().gte(-1).lte(3),
+    refCM: z.number().gte(-1).lte(3),
+    scanCM: z.number().gte(-1).lte(4),
+    nsCM: z.number().gte(-1).lte(3),
+    dcpCMA: z.number().gte(-1).lte(12),
+    refCMA: z.number().gte(-1).lte(4),
+    ooaCMA: z.number().gte(-1).lte(2),
+    ccrAnalysts: z.number().gte(-1).lte(30),
+    ooaAnalysts: z.number().gte(-1).lte(2),
+    trainingAnalysts: z.number().gte(-1).lte(5),
+    refAnalysts: z.number().gte(-1).lte(4),
+    dcpAnalysts: z.number().gte(-1).lte(4),
+    scanAnalysts: z.number().gte(-1).lte(4),
+    adAnalysts: z.number().gte(-1).lte(5),
+    dctAnalysts: z.number().gte(-1).lte(4),
+    stabilityAnalysts: z.number().gte(-1).lte(7),
+    ntAnalysts: z.number().gte(-1).lte(6),
+    nsAnalysts: z.number().gte(-1).lte(6),
     totalRNs: z.number().gte(-1).lte(50),
     totalCMAs: z.number().gte(-1).lte(50),
+    // calculated from CM + CMA sum 
     neededAnalysts: z.number(),
+    // currently scheduled on WIW
     scheduledAnalysts: z.number(),
+    // fieldset total for analysts
     usedAnalysts: z.number(),
+    // to input after form submission
     otAnalysts: z.number()
 })
 
@@ -83,9 +96,9 @@ export default function MainComponent() {
             refAnalysts: 0,
             dcpAnalysts: 0,
             scanAnalysts: 0,
-            adAnalysts: 0,
-            dctAnalysts: 0,
-            stabilityAnalysts: 0,
+            adAnalysts: 2,
+            dctAnalysts: 1,
+            stabilityAnalysts: 2,
             ntAnalysts: 0,
             nsAnalysts: 0,
             totalRNs: 0,
@@ -98,7 +111,6 @@ export default function MainComponent() {
     })
     // create a new sum value for analystsNeeded
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("TARGET HERE", e.target.name)
         if (e.target.name.includes("CM")) {
             let sum = 0
             const RNTotals = form.getValues(["ccrCM", "trainingCM", "refCM", "scanCM", "nsCM"])
@@ -109,34 +121,55 @@ export default function MainComponent() {
         }
         if (e.target.name.includes("CMA")) {
             let sum = 0
-            console.log("CMA HERE")
             const CMAtotals = form.getValues(["dcpCMA", "refCMA", "ooaCMA"])
             for (let int of CMAtotals) {
                 sum += int;
             }
             form.setValue("totalCMAs", sum)
         }
-        // WHEN WE ADD TO OUR LIST OF ANALYSTS, WE NEED TO DO WHAT? WE NEED TO INCREASE OUR TOTAL 
-        // if (e.target.name.includes("Analysts")) {
-        //     let sum = 0
-        //     const UAtotals = form.getValues(["ccrAnalysts", "ooaAnalysts", "trainingAnalysts", "refAnalysts", "dcpAnalysts", "scanAnalysts", "adAnalysts", "dctAnalysts", "stabilityAnalysts", "ntAnalysts", "nsAnalysts"])
-        //     for (let int of UAtotals) {
-        //         sum += int;
-        //     }
-        //     const totalNeeded = form.getValues(["totalRNs", "totalCMAs"])
-        //     form.setValue("otAnalysts", totalNeeded[0] + totalNeeded[1] - sum)
-        // }
+        checkMatchInput(e)
         setNewAnalystCount()
     }
+    // Function checks if we are changing certain inputs and matching that input 
+    const checkMatchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const matchingTargets = ["ccrCM", "scanCM", "ooaCMA"]
+        const currentTarget = e.target.name;
+        if (matchingTargets.includes(e.target.name)) {
+            switch (currentTarget) {
+                case "ccrCM":
+                    form.setValue("ccrAnalysts", e.target.valueAsNumber)
+                    break;
+                case "scanCM":
+                    form.setValue("scanAnalysts", e.target.valueAsNumber)
+                    break;
+                case "ooaCMA":
+                    form.setValue("ooaAnalysts", e.target.valueAsNumber)
+            }
+        }
+    }
+    // Resets all form values to default
+    const resetValues = () => {
+        form.reset()
+        setDate(undefined)
+    }
     const setNewAnalystCount = () => {
+        // FIELDSET TOTAL
+        let analystFieldsetTotal = 0
+        // SUM OF ALL CM'S, CMA'S + AD + PHONE LINES
         let sum = 0;
+        const fieldSetTotals = form.getValues(["adAnalysts", "dctAnalysts", "stabilityAnalysts", "ntAnalysts", "scanAnalysts", "dcpAnalysts", "refAnalysts", "trainingAnalysts", "ooaAnalysts", "ccrAnalysts", "nsAnalysts"])
+        for (let int of fieldSetTotals) {
+            analystFieldsetTotal += int;
+        }
         const totalNeeded = form.getValues(["totalRNs", "totalCMAs"]) as number[]
         const currentlyScheduled = form.getValues("scheduledAnalysts");
-        const UAtotals = form.getValues(["ccrAnalysts", "ooaAnalysts", "trainingAnalysts", "refAnalysts", "dcpAnalysts", "scanAnalysts", "adAnalysts", "dctAnalysts", "stabilityAnalysts", "ntAnalysts", "nsAnalysts"])
+        // For now, we are commenting out. However, this can eventually get the values of all form filled analyst counts and needs to be subtracted from the total on the bottom of function.
+        const UAtotals = form.getValues(["adAnalysts", "dctAnalysts", "stabilityAnalysts", "ntAnalysts"])
         for (let int of UAtotals) {
             sum += int;
         }
-        form.setValue("neededAnalysts", totalNeeded[0] + totalNeeded[1] - currentlyScheduled - sum)
+        form.setValue("neededAnalysts", totalNeeded[0] + totalNeeded[1] + sum)
+        form.setValue("usedAnalysts", analystFieldsetTotal)
     }
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Values", values)
@@ -150,8 +183,8 @@ export default function MainComponent() {
                     {/* Case Managers Fieldset  */}
                     <fieldset className="grid gap-6 rounded-lg border p-4">
                         <legend className="-ml-1 px-1 text-sm font-bold">Case Managers</legend>
-                        {/* DATE FORM FORM */}
-                        <div className="grid gap-3 col-span-full col-start-2">
+
+                        <div className="grid gap-3 col-span-full">
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button
@@ -187,6 +220,8 @@ export default function MainComponent() {
                                 </PopoverContent>
                             </Popover>
                         </div>
+                        {/* DATE FORM FORM */}
+
                         {/* CASE MANAGER GRID  */}
                         <div className="grid grid-cols-3 gap-4">
                             {/* CCR RN  */}
@@ -476,7 +511,7 @@ export default function MainComponent() {
                             <div className="grid gap-3 col-span-1">
                                 <FormField
                                     control={form.control}
-                                    name="trainingAnalysts"
+                                    name="ooaAnalysts"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>OOA</FormLabel>
@@ -638,7 +673,7 @@ export default function MainComponent() {
                             <div className="grid gap-3 col-span-1">
                                 <FormField
                                     control={form.control}
-                                    name="dctAnalysts"
+                                    name="stabilityAnalysts"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Stability</FormLabel>
@@ -692,17 +727,16 @@ export default function MainComponent() {
                             <div className="grid gap-3 col-span-1">
                                 <FormField
                                     control={form.control}
-                                    name="ntAnalysts"
+                                    name="nsAnalysts"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Nightshift</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="number"
-                                                    // Selects entire number upon input click
                                                     onFocus={(event) => event.target.select()}
-                                                    placeholder="0" {...field}
-                                                    // On change event added to inputs to account for string value error for numbers
+                                                    placeholder="0"
+                                                    {...field}
                                                     onChange={event => {
                                                         field.onChange(+event.target.value)
                                                         handleInputChange(event)
@@ -715,7 +749,34 @@ export default function MainComponent() {
                                     )}
                                 />
                             </div>
+                            {/* fieldset analyst total */}
+                            <div className="grid gap-3 col-span-1">
+                                <FormField
+                                    control={form.control}
+                                    name="usedAnalysts"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Total</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    onFocus={(event) => event.target.select()}
+                                                    placeholder="0"
+                                                    {...field}
+                                                    onChange={event => {
+                                                        field.onChange(+event.target.value)
+                                                        handleInputChange(event)
+                                                    }}
+                                                />
+                                            </FormControl>
+                                            <FormDescription>Fieldset Total</FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
                         </div>
+
                     </fieldset>
                     {/* TOTAL NEEDED */}
                     <fieldset className="grid gap-6 rounded-lg border p-4 grid-cols-4">
@@ -760,6 +821,27 @@ export default function MainComponent() {
                                 )}
                             />
                         </div>
+                        {/* ANALYSTS SCHEDULED */}
+                        <div className="col-span-2 grid gap-3">
+                            <FormField
+                                control={form.control}
+                                name="scheduledAnalysts"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Analysts Scheduled</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                onFocus={(event) => event.target.select()}
+                                                placeholder="0"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormDescription>Analysts Scheduled Today</FormDescription>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                         {/* ANALYSTS NEEDED (CALCULATED) */}
                         <div className="col-span-2 grid gap-3">
                             <FormField
@@ -778,14 +860,31 @@ export default function MainComponent() {
                                                 readOnly
                                             />
                                         </FormControl>
-                                        <FormDescription>OT Analysts needed.</FormDescription>
+                                        <FormDescription>CM + CMA + AD + Phones</FormDescription>
                                     </FormItem>
                                 )}
                             />
                         </div>
+                        <div className="col-span-2 grid gap-3">
+                            <AlertDialog>
+                                <AlertDialogTrigger>Reset</AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you sure you want to reset all values?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action will reset all entries to 0.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={resetValues}>Reset</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </div>
                         {/* SUBMISSION BUTTON */}
-                        <div className="col-span-full grid gap-3">
-                            <Button type="submit" variant={"secondary"}>
+                        <div className="col-span-2 grid gap-3">
+                            <Button type="submit" variant={"default"}>
                                 Submit
                             </Button>
                         </div>
