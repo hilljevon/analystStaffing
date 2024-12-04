@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { createClient } from "@/utils/supabase/client"
 import { useToast } from "@/hooks/use-toast"
+import { postNewSchedule } from "@/controllers/schedules.controllers"
 const formSchema = z.object({
     ccrCM: z.number().gte(-1).lte(30),
     trainingCM: z.number().gte(-1).lte(3),
@@ -79,10 +80,7 @@ const formSchema = z.object({
 })
 
 export default function MainComponent() {
-    const { toast } = useToast()
-
     const [date, setDate] = useState<Date>()
-    const [totalNeeded, setTotalNeeded] = useState(0)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -176,8 +174,9 @@ export default function MainComponent() {
         form.setValue("usedAnalysts", analystFieldsetTotal)
     }
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log("Values", values)
-        console.log("Type of date string", date)
+        const fullInfo = { ...values, date };
+        postNewSchedule(fullInfo)
+        console.log("Submission done")
     }
     return (
         <div
@@ -837,9 +836,14 @@ export default function MainComponent() {
                                         <FormControl>
                                             <Input
                                                 type="number"
+                                                // Selects entire number upon input click
                                                 onFocus={(event) => event.target.select()}
-                                                placeholder="0"
-                                                {...field}
+                                                placeholder="0" {...field}
+                                                // On change event added to inputs to account for string value error for numbers
+                                                onChange={event => {
+                                                    field.onChange(+event.target.value)
+                                                    handleInputChange(event)
+                                                }}
                                             />
                                         </FormControl>
                                         <FormDescription>Analysts Scheduled Today</FormDescription>
