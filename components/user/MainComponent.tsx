@@ -44,6 +44,8 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { createClient } from "@/utils/supabase/client"
+import { useToast } from "@/hooks/use-toast"
 const formSchema = z.object({
     ccrCM: z.number().gte(-1).lte(30),
     trainingCM: z.number().gte(-1).lte(3),
@@ -76,7 +78,9 @@ const formSchema = z.object({
     otAnalysts: z.number()
 })
 
-export default function MainComponent() {
+export default function MainComponent({ schedules }: { schedules: any }) {
+    const { toast } = useToast()
+    schedules && toast({ title: "Successful!", description: "Successfully connected to server" })
     const [date, setDate] = useState<Date>()
     const [totalNeeded, setTotalNeeded] = useState(0)
     const form = useForm<z.infer<typeof formSchema>>({
@@ -173,6 +177,7 @@ export default function MainComponent() {
     }
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Values", values)
+        console.log("Type of date string", date)
     }
     return (
         <div
