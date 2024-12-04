@@ -78,9 +78,9 @@ const formSchema = z.object({
     otAnalysts: z.number()
 })
 
-export default function MainComponent({ schedules }: { schedules: any }) {
+export default function MainComponent() {
     const { toast } = useToast()
-    schedules && toast({ title: "Successful!", description: "Successfully connected to server" })
+
     const [date, setDate] = useState<Date>()
     const [totalNeeded, setTotalNeeded] = useState(0)
     const form = useForm<z.infer<typeof formSchema>>({
