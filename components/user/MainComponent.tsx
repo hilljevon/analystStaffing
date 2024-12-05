@@ -45,8 +45,9 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { createClient } from "@/utils/supabase/client"
-import { useToast } from "@/hooks/use-toast"
 import { postNewSchedule } from "@/controllers/schedules.controllers"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 const formSchema = z.object({
     ccrCM: z.number().gte(-1).lte(30),
     trainingCM: z.number().gte(-1).lte(3),
@@ -80,6 +81,7 @@ const formSchema = z.object({
 })
 
 export default function MainComponent() {
+    const router = useRouter()
     const [date, setDate] = useState<Date>()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -170,13 +172,22 @@ export default function MainComponent() {
         for (let int of UAtotals) {
             sum += int;
         }
-        form.setValue("neededAnalysts", totalNeeded[0] + totalNeeded[1] + sum)
+        form.setValue("neededAnalysts", totalNeeded[0] + totalNeeded[1])
         form.setValue("usedAnalysts", analystFieldsetTotal)
     }
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         const fullInfo = { ...values, date };
-        postNewSchedule(fullInfo)
-        console.log("Submission done")
+        const newEntry = postNewSchedule(fullInfo)
+        if (newEntry == null) {
+            toast.warning("Unable to create new entry. Please see console for details")
+        } else {
+            resetValues()
+            toast.success("Entry successfully added!")
+            console.log("New entry here", newEntry)
+            router.push("/history")
+        }
+
     }
     return (
         <div
@@ -869,7 +880,7 @@ export default function MainComponent() {
                                                 readOnly
                                             />
                                         </FormControl>
-                                        <FormDescription>CM + CMA + AD + Phones</FormDescription>
+                                        <FormDescription>CM + CMA's</FormDescription>
                                     </FormItem>
                                 )}
                             />
