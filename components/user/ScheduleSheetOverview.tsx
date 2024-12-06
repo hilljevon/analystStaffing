@@ -58,6 +58,12 @@ import { editSchedule, postNewSchedule } from "@/controllers/schedules.controlle
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
 
 const formSchema = z.object({
     ccrCM: z.number().gte(-1).lte(30),
@@ -250,6 +256,17 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
                                                 )}
                                             />
                                         </div>
+                                    </fieldset>
+                                    <fieldset className='grid gap-6 rounded-lg border p-4 grid-cols-5'>
+                                        <legend className="-ml-1 px-1 text-sm font-bold">Advanced</legend>
+                                        <Accordion className='col-span-full' type="single" collapsible>
+                                            <AccordionItem value="item-1">
+                                                <AccordionTrigger>Full Schedule</AccordionTrigger>
+                                                <AccordionContent>
+                                                    Insert other schedule info here.
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                        </Accordion>
                                     </fieldset>
                                     <fieldset className="grid gap-6 rounded-lg border p-4 grid-cols-5">
                                         <legend className="-ml-1 px-1 text-sm font-bold">Actions</legend>
