@@ -44,7 +44,6 @@ export const TableColumns: ColumnDef<ScheduleInterface>[] = [
     {
         accessorKey: "date",
         header: ({ column }) => {
-            console.log("Data column here", column)
             return (
                 <Button
                     variant="ghost"
