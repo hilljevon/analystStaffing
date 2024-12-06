@@ -19,6 +19,15 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+
 
 import { Button } from "@/components/ui/button"
 import {
@@ -74,7 +83,7 @@ export function DataTable<TData, TValue>({ columns, data, }: DataTableProps<TDat
     })
     return (
         <>
-            <div className="flex items-center pb-8">
+            {/* <div className="flex items-center pb-8">
                 <Input
                     placeholder="Filter Name"
                     value={(table.getColumn("date")?.getFilterValue() as string) ?? ""}
@@ -111,7 +120,7 @@ export function DataTable<TData, TValue>({ columns, data, }: DataTableProps<TDat
                             })}
                     </DropdownMenuContent>
                 </DropdownMenu>
-            </div>
+            </div> */}
             <div className="rounded-2xl border px-8 py-4">
                 <Table className="text-sm">
                     <TableHeader className="text-start text-blue-600 font-geistSans font-extrabold">

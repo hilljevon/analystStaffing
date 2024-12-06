@@ -12,7 +12,7 @@ const page = async () => {
             <header className="top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
                 <h1 className="text-xl font-semibold">History</h1>
             </header>
-            <div className="container mx-auto px-10">
+            <div className="container mx-auto px-10 py-4">
                 <SchedulesTable allSchedules={allSchedules} />
             </div>
         </>

@@ -35,12 +35,9 @@ export interface ScheduleInterface {
 const SchedulesTable = ({ allSchedules }: { allSchedules: ScheduleInterface[] }) => {
     return (
         <div className="">
-            {/* {allSchedules.map((schedule) => (
-                <div key={schedule.id}>
-                    {schedule.date}
-                </div>
-            ))} */}
-            <DataTable columns={TableColumns} data={allSchedules} />
+            {allSchedules && (
+                <DataTable columns={TableColumns} data={allSchedules} />
+            )}
         </div>
     )
 }
