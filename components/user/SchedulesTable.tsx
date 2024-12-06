@@ -1,5 +1,7 @@
 "use client"
 import React from 'react'
+import { DataTable } from './DataTable'
+import { TableColumns } from './TableColumns'
 export interface ScheduleInterface {
     id: number,
     created_at: string,
@@ -32,14 +34,13 @@ export interface ScheduleInterface {
 }
 const SchedulesTable = ({ allSchedules }: { allSchedules: ScheduleInterface[] }) => {
     return (
-        <div
-            className="relative hidden flex-col min-w-max items-start gap-4 md:flex mt-12"
-        >
-            {allSchedules.map((schedule) => (
+        <div className="">
+            {/* {allSchedules.map((schedule) => (
                 <div key={schedule.id}>
                     {schedule.date}
                 </div>
-            ))}
+            ))} */}
+            <DataTable columns={TableColumns} data={allSchedules} />
         </div>
     )
 }
