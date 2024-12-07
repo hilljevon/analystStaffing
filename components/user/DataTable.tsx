@@ -48,6 +48,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 
 interface DataTableProps<TData, TValue> {
@@ -59,7 +60,7 @@ interface RowSelectionInterface {
 }
 export function DataTable<TData, TValue>({ columns, data, }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
-
+    const router = useRouter()
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         []
     )
@@ -167,8 +168,9 @@ export function DataTable<TData, TValue>({ columns, data, }: DataTableProps<TDat
             </div>
             <div className="flex items-center justify-between space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                    {/* {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                    {table.getFilteredRowModel().rows.length} row(s) selected. */}
+                    <Button size={"sm"} variant={"secondary"} onClick={() => router.refresh()}>Refresh</Button>
                 </div>
                 <div>
                 </div>

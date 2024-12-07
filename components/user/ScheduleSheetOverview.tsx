@@ -54,7 +54,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { createClient } from "@/utils/supabase/client"
-import { editSchedule, postNewSchedule } from "@/controllers/schedules.controllers"
+import { deleteSchedule, editSchedule, postNewSchedule } from "@/controllers/schedules.controllers"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
@@ -151,8 +151,18 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
             console.log("Entry here", newEntry)
             setIsOpen(false)
             toast.success("Entry successfully updated!")
-            router.push("/history")
-
+            router.refresh()
+        }
+    }
+    function handleDelete() {
+        const deletedSchedule = deleteSchedule(schedule.id);
+        if (deleteSchedule == null) {
+            console.log("Unable to delete schedule");
+            toast.error("Unable to delete schedule. Please see console and try again.");
+        } else {
+            toast.success("Successfully deleted schedule.")
+            setIsOpen(false)
+            router.refresh()
         }
     }
     return (
@@ -276,7 +286,11 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
                                             </SheetPrimitive.Close>
                                         </div> */}
                                         <div className="grid gap-3 col-span-2">
-                                            <Button variant={"destructive"} size={"sm"} type='submit'>Delete</Button>
+                                            <Button onClick={(e) => {
+                                                e.preventDefault()
+                                                handleDelete()
+                                            }
+                                            } variant={"destructive"} size={"sm"}>Delete</Button>
                                         </div>
                                         <div className="grid gap-3 col-start-4 col-span-2">
                                             <Button type='submit' size={"sm"} >Submit</Button>
