@@ -6,7 +6,7 @@ import React from 'react'
 
 const page = async () => {
     const allSchedules = await fetchAllSchedules()
-    if (allSchedules == null || allSchedules == undefined) return ErrorPage
+    if (allSchedules == null || allSchedules == undefined) return <ErrorPage />
     return (
         <>
             <header className="top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">

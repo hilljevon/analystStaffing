@@ -154,6 +154,61 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
             router.refresh()
         }
     }
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.name.includes("CM")) {
+            let sum = 0
+            const RNTotals = form.getValues(["ccrCM", "trainingCM", "refCM", "scanCM", "nsCM"])
+            for (let int of RNTotals) {
+                sum += int;
+            }
+            form.setValue("totalRNs", sum)
+        }
+        if (e.target.name.includes("CMA")) {
+            let sum = 0
+            const CMAtotals = form.getValues(["dcpCMA", "refCMA", "ooaCMA"])
+            for (let int of CMAtotals) {
+                sum += int;
+            }
+            form.setValue("totalCMAs", sum)
+        }
+        checkMatchInput(e)
+        setNewAnalystCount()
+    }
+    const setNewAnalystCount = () => {
+        // FIELDSET TOTAL
+        let analystFieldsetTotal = 0
+        // SUM OF ALL CM'S, CMA'S + AD + PHONE LINES
+        let sum = 0;
+        const fieldSetTotals = form.getValues(["adAnalysts", "dctAnalysts", "stabilityAnalysts", "ntAnalysts", "scanAnalysts", "dcpAnalysts", "refAnalysts", "trainingAnalysts", "ooaAnalysts", "ccrAnalysts", "nsAnalysts"])
+        for (let int of fieldSetTotals) {
+            analystFieldsetTotal += int;
+        }
+        const totalNeeded = form.getValues(["totalRNs", "totalCMAs"]) as number[]
+        const currentlyScheduled = form.getValues("scheduledAnalysts");
+        // For now, we are commenting out. However, this can eventually get the values of all form filled analyst counts and needs to be subtracted from the total on the bottom of function.
+        const UAtotals = form.getValues(["adAnalysts", "dctAnalysts", "stabilityAnalysts", "ntAnalysts"])
+        for (let int of UAtotals) {
+            sum += int;
+        }
+        form.setValue("neededAnalysts", totalNeeded[0] + totalNeeded[1])
+        form.setValue("usedAnalysts", analystFieldsetTotal)
+    }
+    const checkMatchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const matchingTargets = ["ccrCM", "scanCM", "ooaCMA"]
+        const currentTarget = e.target.name;
+        if (matchingTargets.includes(e.target.name)) {
+            switch (currentTarget) {
+                case "ccrCM":
+                    form.setValue("ccrAnalysts", e.target.valueAsNumber)
+                    break;
+                case "scanCM":
+                    form.setValue("scanAnalysts", e.target.valueAsNumber)
+                    break;
+                case "ooaCMA":
+                    form.setValue("ooaAnalysts", e.target.valueAsNumber)
+            }
+        }
+    }
     function handleDelete() {
         const deletedSchedule = deleteSchedule(schedule.id);
         if (deleteSchedule == null) {
@@ -273,7 +328,505 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
                                             <AccordionItem value="item-1">
                                                 <AccordionTrigger>Full Schedule</AccordionTrigger>
                                                 <AccordionContent>
-                                                    Insert other schedule info here.
+                                                    <div className='grid grid-cols-10 p-4 gap-6 text-sm'>
+                                                        {/* CCR RN  */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="ccrCM"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>CCR CM</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* Training CM's */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="trainingCM"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>TRN CM</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* REF CM */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="refCM"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>REF CM</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* SCAN CM */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="scanCM"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>SCAN CM</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* NS CM */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="nsCM"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>NS CM</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* DCP CMA */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="dcpCMA"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>DCP CMA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* REF CMA */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="refCMA"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>REF CMA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* OOA CMA */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="ooaCMA"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>OOA CMA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* CCR ANALYSTS */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="ccrAnalysts"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>CCR UA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* Training ANALYST'S */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="trainingAnalysts"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>TRN UA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* OOA ANALYST'S */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="ooaAnalysts"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>OOA UA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* REF ANALYST */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="refAnalysts"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>REF UA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* DCP ANALYST */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="dcpAnalysts"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>DCP UA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* SCAN ANALYST */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="scanAnalysts"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>SCAN UA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* AD ANALYST */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="adAnalysts"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>AD UA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* DCT ANALYST */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="dctAnalysts"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>DCT UA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* STABILITY ANALYST */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="stabilityAnalysts"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>Stability</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* NT ANALYST */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="ntAnalysts"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>NT UA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                // Selects entire number upon input click
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0" {...field}
+                                                                                // On change event added to inputs to account for string value error for numbers
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                        {/* NS ANALYST */}
+                                                        <div className="grid gap-3 col-span-1">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="nsAnalysts"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>NS UA</FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                type="number"
+                                                                                onFocus={(event) => event.target.select()}
+                                                                                placeholder="0"
+                                                                                {...field}
+                                                                                onChange={event => {
+                                                                                    field.onChange(+event.target.value)
+                                                                                    handleInputChange(event)
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </AccordionContent>
                                             </AccordionItem>
                                         </Accordion>
