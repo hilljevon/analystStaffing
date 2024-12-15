@@ -216,8 +216,8 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
             toast.error("Unable to delete schedule. Please see console and try again.");
         } else {
             toast.success("Successfully deleted schedule.")
+            router.push("/history")
             setIsOpen(false)
-            router.refresh()
         }
     }
     return (
