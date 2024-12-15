@@ -142,9 +142,9 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
         String(date.getDate()).padStart(2, '0'),     // Day
         date.getFullYear()                           // Year
     ].join('/');
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("New Values here", values)
-        const newEntry = editSchedule(values.id, values)
+        const newEntry = await editSchedule(values.id, values)
         if (newEntry == null) {
             toast.error("Unable to edit schedule. Please see console.")
         } else {
@@ -309,7 +309,6 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
                                                         <FormControl>
                                                             <Input
                                                                 type="number"
-
                                                                 onFocus={(event) => event.target.select()}
                                                                 {...field}
                                                                 onChange={event => {

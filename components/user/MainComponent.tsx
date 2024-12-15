@@ -176,15 +176,14 @@ export default function MainComponent() {
         form.setValue("usedAnalysts", analystFieldsetTotal)
     }
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         const fullInfo = { ...values, date };
-        const newEntry = postNewSchedule(fullInfo)
+        const newEntry = await postNewSchedule(fullInfo)
         if (newEntry == null) {
             toast.warning("Unable to create new entry. Please see console for details")
         } else {
             resetValues()
             toast.success("Entry successfully added!")
-            console.log("New entry here", newEntry)
             router.push("/history")
         }
 

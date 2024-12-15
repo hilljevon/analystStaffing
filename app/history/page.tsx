@@ -13,7 +13,9 @@ const page = async () => {
                 <h1 className="text-xl font-semibold">History</h1>
             </header>
             <div className="container mx-auto px-10 py-4">
-                <SchedulesTable allSchedules={allSchedules} />
+                {allSchedules && (
+                    <SchedulesTable allSchedules={allSchedules} />
+                )}
             </div>
         </>
     )
