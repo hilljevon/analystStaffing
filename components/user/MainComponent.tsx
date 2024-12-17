@@ -161,7 +161,7 @@ export default function MainComponent() {
         let analystFieldsetTotal = 0
         // SUM OF ALL CM'S, CMA'S + AD + PHONE LINES
         let sum = 0;
-        const fieldSetTotals = form.getValues(["adAnalysts", "dctAnalysts", "stabilityAnalysts", "ntAnalysts", "scanAnalysts", "dcpAnalysts", "refAnalysts", "trainingAnalysts", "ooaAnalysts", "ccrAnalysts", "nsAnalysts"])
+        const fieldSetTotals = form.getValues(["adAnalysts", "dctAnalysts", "stabilityAnalysts", "ntAnalysts", "scanAnalysts", "dcpAnalysts", "refAnalysts", "trainingAnalysts", "ooaAnalysts", "ccrAnalysts"])
         for (let int of fieldSetTotals) {
             analystFieldsetTotal += int;
         }
@@ -763,14 +763,14 @@ export default function MainComponent() {
                                     )}
                                 />
                             </div>
-                            {/* fieldset analyst total */}
-                            <div className="grid gap-3 col-span-1">
+                            {/* dayshift total */}
+                            <div className="grid gap-3 col-span-2">
                                 <FormField
                                     control={form.control}
                                     name="usedAnalysts"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Total</FormLabel>
+                                            <FormLabel>Dayshift Total</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="number"
@@ -783,7 +783,33 @@ export default function MainComponent() {
                                                     }}
                                                 />
                                             </FormControl>
-                                            <FormDescription>Fieldset Total</FormDescription>
+                                            <FormDescription></FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                            {/* nightshift total */}
+                            <div className="grid gap-3 col-span-2">
+                                <FormField
+                                    control={form.control}
+                                    name="nsAnalysts"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Nightshift Total</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    onFocus={(event) => event.target.select()}
+                                                    placeholder="0"
+                                                    {...field}
+                                                    onChange={event => {
+                                                        field.onChange(+event.target.value)
+                                                        handleInputChange(event)
+                                                    }}
+                                                />
+                                            </FormControl>
+                                            <FormDescription></FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
