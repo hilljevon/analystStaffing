@@ -144,14 +144,15 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
     ].join('/');
     async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("New Values here", values)
+        toast.info("Updating schedule...")
         const newEntry = await editSchedule(values.id, values)
         if (newEntry == null) {
             toast.error("Unable to edit schedule. Please see console.")
         } else {
             console.log("Entry here", newEntry)
             setIsOpen(false)
-            toast.success("Entry successfully updated!")
             router.refresh()
+            toast.success("Entry successfully updated!")
         }
     }
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -209,8 +210,9 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
             }
         }
     }
-    function handleDelete() {
-        const deletedSchedule = deleteSchedule(schedule.id);
+    async function handleDelete() {
+        toast.info("Deleting schedule...")
+        const deletedSchedule = await deleteSchedule(schedule.id);
         if (deleteSchedule == null) {
             console.log("Unable to delete schedule");
             toast.error("Unable to delete schedule. Please see console and try again.");

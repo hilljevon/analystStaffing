@@ -98,9 +98,9 @@ export default function MainComponent() {
             ooaAnalysts: 0,
             trainingAnalysts: 0,
             refAnalysts: 0,
-            dcpAnalysts: 0,
+            dcpAnalysts: 2,
             scanAnalysts: 0,
-            adAnalysts: 2,
+            adAnalysts: 3,
             dctAnalysts: 1,
             stabilityAnalysts: 2,
             ntAnalysts: 0,
@@ -178,6 +178,7 @@ export default function MainComponent() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const fullInfo = { ...values, date };
+        toast.info("Adding new entry...")
         const newEntry = await postNewSchedule(fullInfo)
         if (newEntry == null) {
             toast.warning("Unable to create new entry. Please see console for details")
@@ -197,7 +198,6 @@ export default function MainComponent() {
                     {/* Case Managers Fieldset  */}
                     <fieldset className="grid gap-6 rounded-lg border p-4">
                         <legend className="-ml-1 px-1 text-sm font-bold">Case Managers</legend>
-
                         <div className="grid gap-3 col-span-full">
                             <Popover>
                                 <PopoverTrigger asChild>
