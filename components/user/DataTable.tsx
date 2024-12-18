@@ -142,7 +142,7 @@ export function DataTable<TData, TValue>({ columns, data, }: DataTableProps<TDat
                             <TableRow className="" key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead className="" colSpan={1} key={header.id}>
+                                        <TableHead className="font-extrabold" colSpan={1} key={header.id}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
