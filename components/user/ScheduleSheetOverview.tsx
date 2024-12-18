@@ -222,6 +222,7 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
             setIsOpen(false)
         }
     }
+
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger>Edit</SheetTrigger>
@@ -233,7 +234,7 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
                             <Form {...form}>
                                 <form onSubmit={form.handleSubmit(onSubmit)} className="grid w-full items-start gap-6">
                                     {/* OVERVIEW FIELDSET */}
-                                    <fieldset className="grid gap-6 rounded-lg border p-4 grid-cols-4">
+                                    <fieldset className="grid gap-6 rounded-lg border p-4 grid-cols-3">
                                         <legend className="-ml-1 px-1 text-sm font-bold">Overview</legend>
                                         <div className="grid gap-3 col-span-1">
                                             <FormField
@@ -250,6 +251,7 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
                                                                 {...field}
                                                                 onChange={event => {
                                                                     field.onChange(+event.target.value)
+                                                                    handleInputChange(event)
                                                                 }}
                                                             />
                                                         </FormControl>
@@ -272,6 +274,7 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
                                                                 {...field}
                                                                 onChange={event => {
                                                                     field.onChange(+event.target.value)
+                                                                    handleInputChange(event)
                                                                 }}
                                                             />
                                                         </FormControl>
@@ -294,6 +297,7 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
                                                                 {...field}
                                                                 onChange={event => {
                                                                     field.onChange(+event.target.value)
+                                                                    handleInputChange(event)
                                                                 }}
                                                             />
                                                         </FormControl>
@@ -315,6 +319,29 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
                                                                 {...field}
                                                                 onChange={event => {
                                                                     field.onChange(+event.target.value)
+                                                                    handleInputChange(event)
+                                                                }}
+                                                            />
+                                                        </FormControl>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        </div>
+                                        <div className="grid gap-3 col-span-1">
+                                            <FormField
+                                                control={form.control}
+                                                name="neededAnalysts"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Needed Analysts</FormLabel>
+                                                        <FormControl>
+                                                            <Input
+                                                                type="number"
+                                                                onFocus={(event) => event.target.select()}
+                                                                {...field}
+                                                                onChange={event => {
+                                                                    field.onChange(+event.target.value)
+                                                                    handleInputChange(event)
                                                                 }}
                                                             />
                                                         </FormControl>
