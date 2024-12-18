@@ -82,6 +82,19 @@ export function DataTable<TData, TValue>({ columns, data, }: DataTableProps<TDat
             rowSelection,
         }
     })
+    const getRowColor = (row: any) => {
+        const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const weekendDays = ["Sunday", "Saturday"];
+        const rowData = row.original;
+        const date = new Date(rowData.date);
+        const dayOfWeek = daysOfWeek[date.getDay()];
+
+        if (weekendDays.includes(dayOfWeek)) {
+            return "bg-yellow-100"; // Highlight weekends in yellow
+        } else {
+            return row.index % 2 === 0 ? "bg-white" : "bg-gray-100"; // Alternate non-weekend rows
+        }
+    }
     return (
         <>
             {/* <div className="flex items-center pb-8">
@@ -123,7 +136,7 @@ export function DataTable<TData, TValue>({ columns, data, }: DataTableProps<TDat
                 </DropdownMenu>
             </div> */}
             <div className="rounded-2xl border px-8 py-4">
-                <Table className="text-sm">
+                <Table className="text-sm ">
                     <TableHeader className="text-start text-blue-600 font-geistSans font-extrabold">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow className="" key={headerGroup.id}>
@@ -148,6 +161,7 @@ export function DataTable<TData, TValue>({ columns, data, }: DataTableProps<TDat
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
+                                    className={getRowColor(row)}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell className="border p-2" key={cell.id}>

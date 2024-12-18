@@ -9,6 +9,7 @@ import {
   HomeIcon,
   Info,
   PhoneForwardedIcon,
+  PlusSquare,
   TableIcon,
 } from "lucide-react"
 import {
@@ -24,13 +25,13 @@ import { usePathname } from 'next/navigation'
 const sidebarItems = [
   {
     href: "/",
-    label: "Home",
+    label: "History",
     icon: HomeIcon
   },
   {
-    href: "/history",
-    label: "History",
-    icon: TableIcon
+    href: "/addschedule",
+    label: "Add Schedule",
+    icon: PlusSquare
   },
 ]
 import { cn } from '@/lib/utils'

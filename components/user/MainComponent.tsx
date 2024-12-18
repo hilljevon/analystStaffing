@@ -115,6 +115,7 @@ export default function MainComponent() {
     })
     // create a new sum value for analystsNeeded
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Adjusting CM Total Count
         if (e.target.name.includes("CM")) {
             let sum = 0
             const RNTotals = form.getValues(["ccrCM", "trainingCM", "refCM", "scanCM", "nsCM"])
@@ -123,6 +124,7 @@ export default function MainComponent() {
             }
             form.setValue("totalRNs", sum)
         }
+        // Adjusting CMA Total Count
         if (e.target.name.includes("CMA")) {
             let sum = 0
             const CMAtotals = form.getValues(["dcpCMA", "refCMA", "ooaCMA"])
@@ -131,7 +133,9 @@ export default function MainComponent() {
             }
             form.setValue("totalCMAs", sum)
         }
+        // if CM count changed, checkMatchInput function will update corresponding analyst count
         checkMatchInput(e)
+        // After potentially updating UA count, we need to update analyst total counts.
         setNewAnalystCount()
     }
     // Function checks if we are changing certain inputs and matching that input 
@@ -159,21 +163,15 @@ export default function MainComponent() {
     const setNewAnalystCount = () => {
         // FIELDSET TOTAL
         let analystFieldsetTotal = 0
-        // SUM OF ALL CM'S, CMA'S + AD + PHONE LINES
-        let sum = 0;
+        // SUM OF ALL Analyst Fieldset Input Entries
         const fieldSetTotals = form.getValues(["adAnalysts", "dctAnalysts", "stabilityAnalysts", "ntAnalysts", "scanAnalysts", "dcpAnalysts", "refAnalysts", "trainingAnalysts", "ooaAnalysts", "ccrAnalysts"])
+        // Getting OT count to add for USED analyst count
+        const otAnalystCount = form.getValues("otAnalysts")
         for (let int of fieldSetTotals) {
             analystFieldsetTotal += int;
         }
-        const totalNeeded = form.getValues(["totalRNs", "totalCMAs"]) as number[]
-        const currentlyScheduled = form.getValues("scheduledAnalysts");
-        // For now, we are commenting out. However, this can eventually get the values of all form filled analyst counts and needs to be subtracted from the total on the bottom of function.
-        const UAtotals = form.getValues(["adAnalysts", "dctAnalysts", "stabilityAnalysts", "ntAnalysts"])
-        for (let int of UAtotals) {
-            sum += int;
-        }
-        form.setValue("neededAnalysts", totalNeeded[0] + totalNeeded[1])
-        form.setValue("usedAnalysts", analystFieldsetTotal)
+        form.setValue("neededAnalysts", analystFieldsetTotal)
+        form.setValue("usedAnalysts", analystFieldsetTotal + otAnalystCount)
     }
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -767,7 +765,7 @@ export default function MainComponent() {
                             <div className="grid gap-3 col-span-2">
                                 <FormField
                                     control={form.control}
-                                    name="usedAnalysts"
+                                    name="neededAnalysts"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Dayshift Total</FormLabel>
@@ -905,7 +903,7 @@ export default function MainComponent() {
                                                 readOnly
                                             />
                                         </FormControl>
-                                        <FormDescription>CM + CMA's</FormDescription>
+                                        <FormDescription>Combined Analyst Entries</FormDescription>
                                     </FormItem>
                                 )}
                             />
