@@ -11,6 +11,8 @@ import {
   PhoneForwardedIcon,
   PlusSquare,
   TableIcon,
+  TrendingUp,
+  TrendingUpDown,
 } from "lucide-react"
 import {
   Tooltip,
@@ -33,6 +35,11 @@ const sidebarItems = [
     label: "Add Schedule",
     icon: PlusSquare
   },
+  {
+    href: "/trends",
+    label: "Trends",
+    icon: TrendingUp
+  }
 ]
 import { cn } from '@/lib/utils'
 const Sidebar = () => {

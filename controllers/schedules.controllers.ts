@@ -81,5 +81,7 @@ export async function deleteSchedule(scheduleId: number) {
         console.log("Error deleting schedule. Message here: ", error)
         return null
     }
+}
+export async function handleAllSchedulesDataRecharts(data: any[]) {
 
 }

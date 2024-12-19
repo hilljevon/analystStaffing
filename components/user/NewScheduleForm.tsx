@@ -80,7 +80,7 @@ const formSchema = z.object({
     otAnalysts: z.number()
 })
 
-export default function MainComponent() {
+export default function NewScheduleForm() {
     const router = useRouter()
     const [date, setDate] = useState<Date>()
     const form = useForm<z.infer<typeof formSchema>>({
@@ -170,8 +170,11 @@ export default function MainComponent() {
         for (let int of fieldSetTotals) {
             analystFieldsetTotal += int;
         }
+        const analystsUsed = analystFieldsetTotal + otAnalystCount
+        const scheduledQuantity = form.getValues("scheduledAnalysts")
+
         form.setValue("neededAnalysts", analystFieldsetTotal)
-        form.setValue("usedAnalysts", analystFieldsetTotal + otAnalystCount)
+        form.setValue("usedAnalysts", scheduledQuantity + otAnalystCount)
     }
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -183,9 +186,8 @@ export default function MainComponent() {
         } else {
             resetValues()
             toast.success("Entry successfully added!")
-            router.push("/history")
+            router.push("/")
         }
-
     }
     return (
         <div

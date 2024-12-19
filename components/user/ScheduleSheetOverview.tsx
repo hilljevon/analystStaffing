@@ -126,8 +126,11 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
             nsAnalysts: schedule.nsAnalysts,
             totalRNs: schedule.totalRNs,
             totalCMAs: schedule.totalCMAs,
+            // THIS IS THE SUM OF FIELDSET VALUES
             neededAnalysts: schedule.neededAnalysts,
+            // THIS IS WHEN I WORK
             scheduledAnalysts: schedule.scheduledAnalysts,
+            // THIS IS THE STAFFING ANALYSTS, WIW + OVERTIME
             usedAnalysts: schedule.usedAnalysts,
             otAnalysts: schedule.otAnalysts,
             created_at: schedule.created_at,
@@ -189,8 +192,11 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
         for (let int of fieldSetTotals) {
             analystFieldsetTotal += int;
         }
+        const analystsUsed = analystFieldsetTotal + otAnalystCount
+        const scheduledQuantity = form.getValues("scheduledAnalysts")
+
         form.setValue("neededAnalysts", analystFieldsetTotal)
-        form.setValue("usedAnalysts", analystFieldsetTotal + otAnalystCount)
+        form.setValue("usedAnalysts", scheduledQuantity + otAnalystCount)
     }
     const checkMatchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const matchingTargets = ["ccrCM", "scanCM", "ooaCMA"]
@@ -216,7 +222,7 @@ const ScheduleSheetOverview = ({ schedule }: { schedule: ScheduleInterface }) =>
             toast.error("Unable to delete schedule. Please see console and try again.");
         } else {
             toast.success("Successfully deleted schedule.")
-            router.push("/history")
+            router.push("/")
             setIsOpen(false)
         }
     }
