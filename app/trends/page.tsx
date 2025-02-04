@@ -1,3 +1,5 @@
+import { ChartConfig } from '@/components/ui/chart'
+import { OTAnalystBarChart } from '@/components/user/charts/OTAnalystBarChart'
 import StaffedVNeededBarChart from '@/components/user/charts/StaffedVNeededBarChart'
 import ErrorPage from '@/components/user/ErrorPage'
 import { fetchAllSchedules, handleAllSchedulesDataRecharts } from '@/controllers/schedules.controllers'
@@ -30,6 +32,7 @@ const allSchedules = [
         totalCMAs: 5,
         neededAnalysts: 32,
         scheduledAnalysts: 32,
+        // THIS IS STAFFED ANALYST METRIC. NEED TO COMPARE THIS WITH THE NEEDEDANALYST METRIC
         usedAnalysts: 35,
         otAnalysts: 0
     },
@@ -364,21 +367,77 @@ const allSchedules = [
         otAnalysts: 7
     }
 ]
-
+export interface ScheduleDataRecharts {
+    id: number
+    created_at: string
+    date: string
+    ccrCM: number
+    trainingCM: number
+    refCM: number
+    scanCM: number
+    nsCM: number
+    dcpCMA: number
+    refCMA: number
+    ooaCMA: number
+    ccrAnalysts: number
+    ooaAnalysts: number
+    trainingAnalysts: number
+    refAnalysts: number
+    dcpAnalysts: number
+    scanAnalysts: number
+    adAnalysts: number
+    dctAnalysts: number
+    stabilityAnalysts: number
+    ntAnalysts: number
+    nsAnalysts: number
+    totalRNs: number
+    totalCMAs: number
+    neededAnalysts: number
+    scheduledAnalysts: number
+    usedAnalysts: number
+    otAnalysts: number
+}
+const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const OTChartConfig = {
+    otAnalysts: {
+        label: "OT Analysts",
+        color: "hsl(var(--chart-1))",
+    },
+} satisfies ChartConfig
+const scheduledChartConfig = {
+    scheduledAnalysts: {
+        label: "Scheduled Analysts",
+        color: "teal",
+    },
+} satisfies ChartConfig
 const page = async () => {
     // const allSchedules = await fetchAllSchedules()
     // if (allSchedules == null || allSchedules == undefined) return <ErrorPage />
     // console.log("All schedules here", allSchedules)
-    const res = handleAllSchedulesDataRecharts(allSchedules)
+    const reformattedSchedules = allSchedules.map((item) => {
+        const date = new Date(item.date);
+        const dayIndex = date.getDay();
+        const formattedDate = [
+            String(date.getMonth() + 1).padStart(2, '0'), // Month (1-based, so add 1)
+            String(date.getDate()).padStart(2, '0'),     // Day                    
+        ].join('/');
+        return { ...item, fullFormattedDate: `${weekdays[dayIndex].slice(0, 3)} ${formattedDate}`, formattedDate }
+    })
     return (
         <>
             <header className="top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
                 <h1 className="text-xl font-semibold">Trends</h1>
             </header>
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-4">
+            <div className="gap-4 p-4 pt-0">
+                <div className="grid gap-4 md:grid-cols-4">
                     <div className="col-span-2 mt-4">
-                        <StaffedVNeededBarChart allSchedules={allSchedules} />
+                        <StaffedVNeededBarChart allSchedules={reformattedSchedules} />
+                    </div>
+                    <div className="col-span-2 mt-4">
+                        <OTAnalystBarChart allSchedules={reformattedSchedules} title={"otAnalysts"} chartConfig={OTChartConfig} />
+                    </div>
+                    <div className="col-span-2 mt-4">
+                        <OTAnalystBarChart allSchedules={reformattedSchedules} title={"scheduledAnalysts"} chartConfig={scheduledChartConfig} />
                     </div>
                 </div>
             </div>
