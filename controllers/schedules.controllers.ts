@@ -6,7 +6,6 @@ import { ScheduleInterface } from "@/components/user/SchedulesTable";
 export async function postNewSchedule(entry: any) {
     try {
         const supabase = await createClient()
-
         const { data: schedules, error: scheduleError } = await supabase
             .from("schedules")
             .insert(entry)
@@ -22,7 +21,6 @@ export async function postNewSchedule(entry: any) {
         console.log("Unable to post new schedule. Error here", error);
         return null
     }
-
 }
 export async function fetchAllSchedules() {
     try {
@@ -45,6 +43,7 @@ export async function fetchAllSchedules() {
     }
 
 }
+
 export async function editSchedule(scheduleId: number, updatedEntry: ScheduleInterface) {
     try {
         const supabase = await createClient()

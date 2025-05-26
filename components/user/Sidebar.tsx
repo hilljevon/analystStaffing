@@ -5,6 +5,7 @@ import {
   Ambulance,
   Calendar,
   CassetteTapeIcon,
+  ChartAreaIcon,
   Clock,
   HomeIcon,
   Info,
@@ -39,6 +40,11 @@ const sidebarItems = [
     href: "/trends",
     label: "Trends",
     icon: TrendingUp
+  },
+  {
+    href: "/census",
+    label: "Census",
+    icon: ChartAreaIcon
   }
 ]
 import { cn } from '@/lib/utils'
