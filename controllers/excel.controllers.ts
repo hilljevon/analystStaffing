@@ -26,42 +26,49 @@ function convertDateTimeStringToDateOnly(input: string) {
 
     return parsedDate; // Return the Date object itself
 }
+function getCurrentDate(cell: any) {
+    const dateString = cell.split("-")[0];
+    const convertedDate = convertToDateType(dateString)
+    return convertedDate
+}
 export function parseExcelFile(cases: any) {
     const columnHeaderIndexes: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY"];
     const caseCensus = []
     const lastCell = cases["!ref"]
     const rowCount = extractRowCount(lastCell)
     // Object of all hashes we want to link to our database.
-    const currentCaseCensus: any = {
-        "Case\nId": "",
-        "Primary Medical Home": "",
-        "DOB": "",
-        "MTT/RA": "",
-        "RN": "",
-        "Service \nCode": "",
-        "Coverage\nType": "",
-        "Age": "",
-        "LOS": "",
-        "DX": "",
-        "Vendor Name": "",
-        "Admit Date": "",
-        "Last CMDate": "",
-        "Not Authorized": "",
-        "Last PAD Reason": "",
-        "Level of Care": "",
-        "Priority Level": "",
-        "Review Outcome": "",
-        "Review Outcome Reason": "",
-        " Entered Date": "",
-        "Anticipated Disposition": "",
-        "Barriers to Dispo": "",
-        "Stability Order Reveived ": "",
-        "StabilityOrder-NKF CM Verbal": "",
-        "SFT Event": "",
-        "SFT Date/Time": "",
-        "Last Pertinent Event": "",
-        "Stable For Transfer Per OURS MD": "",
-    }
+    // const currentCaseCensus: any = {
+    //     "Case\nId": "",
+    //     "Primary Medical Home": "",
+    //     "DOB": "",
+    //     "MTT/RA": "",
+    //     "RN": "",
+    //     "Service \nCode": "",
+    //     "Coverage\nType": "",
+    //     "Age": "",
+    //     "LOS": "",
+    //     "DX": "",
+    //     "Vendor Name": "",
+    //     "Admit Date": "",
+    //     "Last CMDate": "",
+    //     "Not Authorized": "",
+    //     "Last PAD Reason": "",
+    //     "Level of Care": "",
+    //     "Priority Level": "",
+    //     "Review Outcome": "",
+    //     "Review Outcome Reason": "",
+    //     " Entered Date": "",
+    //     "Anticipated Disposition": "",
+    //     "Barriers to Dispo": "",
+    //     "Stability Order Reveived ": "",
+    //     "StabilityOrder-NKF CM Verbal": "",
+    //     "SFT Event": "",
+    //     "SFT Date/Time": "",
+    //     "Last Pertinent Event": "",
+    //     "Stable For Transfer Per OURS MD": "",
+    // }
+    const currentDate = getCurrentDate(cases["A1"]["v"])
+    console.log("All CCR Cases here", cases)
     const allColumnNames: any = {
         "Case\nId": "",
         "Case Assignment Category": "",
@@ -150,6 +157,7 @@ export function parseExcelFile(cases: any) {
         caseCensus.push(
             {
                 caseId: tempRowObject["Case\nId"],
+                censusDate: currentDate,
                 caseAssignmentCategory: tempRowObject["Case Assignment Category"],
                 explicitlyAssignedRn: tempRowObject["Explicitly Assigned RN"],
                 lastAssignedRn: tempRowObject["Last Assigned RN"],
