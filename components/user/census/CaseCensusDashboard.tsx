@@ -473,7 +473,6 @@ const CaseCensusDashboard = () => {
                 const workbook = XLSX.read(binaryData, { type: "binary" });
                 const ccrCaseWorksheet = workbook["Sheets"]["Details"]
                 const res = parseExcelForUpdate(ccrCaseWorksheet)
-
                 if (res) {
                     setExcelCases(res)
                     setDate(res[0].censusDate)
@@ -536,18 +535,20 @@ const CaseCensusDashboard = () => {
     const getCases = async () => {
         const dbCases = await retrieveCasesForUpdate(date)
         if (dbCases) {
+            console.log("DB Cases retrieved here", dbCases)
             toast.success("Cases retrieved for update")
             const updatedCases = dbCases.map((caseItem: any) => {
-                const matchedExcelCase = excelCases.find((xlcase) => xlcase.id == caseItem.id)
+                const matchedExcelCase = excelCases.find((xlcase) => xlcase.caseId == caseItem.caseId)
                 if (matchedExcelCase) {
+                    // HERE IS WHERE WE ACCOUNT FOR OUR OTHER VALUES.
                     if (matchedExcelCase.rn == "OTHER") {
-                        console.log("OTHER MATCH")
                         return { ...caseItem, rn: null }
                     } else {
-                        console.log("NUID MATCH")
                         return { ...caseItem, rn: "ASSIGN" }
                     }
+                    // If for whatever reason, the database case was not in our initial case load, return the regular case.
                 } else {
+                    console.log("CASE FOUND IN PRE, BUT NOT OFFICIAL")
                     return caseItem
                 }
             })

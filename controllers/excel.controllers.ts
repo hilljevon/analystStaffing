@@ -43,26 +43,30 @@ function getCurrentDate(cell: any) {
     return convertedDate
 }
 export function parseExcelForUpdate(cases: any) {
-    const columnHeaderIndexes: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY"];
+    const columnHeaderIndexes: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK"];
     const caseCensus = []
     const intermediateDate = getCurrentDate(cases["A1"]["v"])
+    // Added to get date in string format for DB pull.
     const currentDate = formatDateToYYYYMMDD(intermediateDate)
     const lastCell = cases["!ref"]
+    // Limit for rows in excel sheet
     const rowCount = extractRowCount(lastCell)
+    // Only relevant column names for parsing update
     const allColumnNames: any = {
         "Case\nId": "",
         "RN": "",
     }
+    // Goes through each column title cell and creates key value pair for COLUMN NAME: COLUMN LOCATION (COL NUMBER)
     for (let columnHeader of columnHeaderIndexes) {
         if (cases[columnHeader]) {
             const columnKey = `${columnHeader}2`
-            const inter = cases[columnKey]
-            const currentColumnHeaderName = inter["v"]
+            const currentColumnHeaderName = cases[columnKey]["v"]
             if (currentColumnHeaderName in allColumnNames) {
                 allColumnNames[currentColumnHeaderName] = columnHeader
             }
         }
     }
+    // Iterates through each cell, beginning at first row, down to last row (calculated)
     for (let currentRow = 3; currentRow < rowCount; currentRow++) {
         // Creating a temp object due to automatic hashing in caseHashTable object.
         const tempRowObject: any = {}
@@ -74,8 +78,6 @@ export function parseExcelForUpdate(cases: any) {
                 // To prevent our algorithm from becoming too complicated, we just want it to choose between OTHER and ASSIGN
                 if (key == "RN" && cases[currentKey]["w"] != "OTHER") { // Checks if our current col is RN and if it has an RN's name
                     tempRowObject[key] = "ASSIGN"
-                } else if (key == "RN" && cases[currentKey]["w"] == "OTHER") {
-                    tempRowObject[key] = null
                 } else {
                     tempRowObject[key] = cases[currentKey]["w"]
                 }
