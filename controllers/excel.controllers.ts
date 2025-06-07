@@ -43,7 +43,7 @@ function getCurrentDate(cell: any) {
     return convertedDate
 }
 export function parseExcelForUpdate(cases: any) {
-    const columnHeaderIndexes: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK"];
+    const columnHeaderIndexes: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG"];
     const caseCensus = []
     const intermediateDate = getCurrentDate(cases["A1"]["v"])
     // Added to get date in string format for DB pull.
@@ -58,10 +58,12 @@ export function parseExcelForUpdate(cases: any) {
     }
     // Goes through each column title cell and creates key value pair for COLUMN NAME: COLUMN LOCATION (COL NUMBER)
     for (let columnHeader of columnHeaderIndexes) {
-        if (cases[columnHeader]) {
-            const columnKey = `${columnHeader}2`
-            const currentColumnHeaderName = cases[columnKey]["v"]
-            if (currentColumnHeaderName in allColumnNames) {
+        const columnKey = `${columnHeader}2`
+        const currentColumnHeaderName = cases[columnKey]["v"]
+        if (currentColumnHeaderName in allColumnNames) {
+            if (currentColumnHeaderName == "RN" && columnHeader.includes("A")) {
+                allColumnNames["RN2"] = columnHeader
+            } else {
                 allColumnNames[currentColumnHeaderName] = columnHeader
             }
         }
