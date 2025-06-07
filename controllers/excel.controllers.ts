@@ -26,6 +26,17 @@ function convertDateTimeStringToDateOnly(input: string) {
 
     return parsedDate; // Return the Date object itself
 }
+function formatDateToYYYYMMDD(date: Date | null): string {
+    if (date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth is 0-based
+        const day = date.getDate().toString().padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+    } else {
+        return ""
+    }
+}
 function getCurrentDate(cell: any) {
     const dateString = cell.split("-")[0];
     const convertedDate = convertToDateType(dateString)
@@ -34,7 +45,8 @@ function getCurrentDate(cell: any) {
 export function parseExcelForUpdate(cases: any) {
     const columnHeaderIndexes: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY"];
     const caseCensus = []
-    const currentDate = getCurrentDate(cases["A1"]["v"])
+    const intermediateDate = getCurrentDate(cases["A1"]["v"])
+    const currentDate = formatDateToYYYYMMDD(intermediateDate)
     const lastCell = cases["!ref"]
     const rowCount = extractRowCount(lastCell)
     const allColumnNames: any = {
@@ -42,10 +54,13 @@ export function parseExcelForUpdate(cases: any) {
         "RN": "",
     }
     for (let columnHeader of columnHeaderIndexes) {
-        const columnKey = `${columnHeader}2`
-        const currentColumnHeaderName = cases[columnKey]["v"]
-        if (currentColumnHeaderName in allColumnNames) {
-            allColumnNames[currentColumnHeaderName] = columnHeader
+        if (cases[columnHeader]) {
+            const columnKey = `${columnHeader}2`
+            const inter = cases[columnKey]
+            const currentColumnHeaderName = inter["v"]
+            if (currentColumnHeaderName in allColumnNames) {
+                allColumnNames[currentColumnHeaderName] = columnHeader
+            }
         }
     }
     for (let currentRow = 3; currentRow < rowCount; currentRow++) {
