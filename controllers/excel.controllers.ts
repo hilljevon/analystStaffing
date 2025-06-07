@@ -31,42 +31,61 @@ function getCurrentDate(cell: any) {
     const convertedDate = convertToDateType(dateString)
     return convertedDate
 }
+export function parseExcelForUpdate(cases: any) {
+    const columnHeaderIndexes: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY"];
+    const caseCensus = []
+    const currentDate = getCurrentDate(cases["A1"]["v"])
+    const lastCell = cases["!ref"]
+    const rowCount = extractRowCount(lastCell)
+    const allColumnNames: any = {
+        "Case\nId": "",
+        "RN": "",
+    }
+    for (let columnHeader of columnHeaderIndexes) {
+        const columnKey = `${columnHeader}2`
+        const currentColumnHeaderName = cases[columnKey]["v"]
+        if (currentColumnHeaderName in allColumnNames) {
+            allColumnNames[currentColumnHeaderName] = columnHeader
+        }
+    }
+    for (let currentRow = 3; currentRow < rowCount; currentRow++) {
+        // Creating a temp object due to automatic hashing in caseHashTable object.
+        const tempRowObject: any = {}
+        // Once inside a row, iterate through each column and add it to our tempRowObject hash. Example: Key: Column Title (MTT/RA). Value: 
+        for (const [key, value] of Object.entries(allColumnNames)) {
+            let currentKey = `${value}${currentRow}`
+            // Make sure there is a value on the cell
+            if (cases[currentKey]) {
+                // To prevent our algorithm from becoming too complicated, we just want it to choose between OTHER and ASSIGN
+                if (key == "RN" && cases[currentKey]["w"] != "OTHER") { // Checks if our current col is RN and if it has an RN's name
+                    tempRowObject[key] = "ASSIGN"
+                } else if (key == "RN" && cases[currentKey]["w"] == "OTHER") {
+                    tempRowObject[key] = null
+                } else {
+                    tempRowObject[key] = cases[currentKey]["w"]
+                }
+                // Determining how we want to handle empty entries in our database. Currently set to N/A
+            } else {
+                tempRowObject[key] = null
+            }
+        }
+        // We need to redefine the object keys to match what our database column names are for smooth integration
+        caseCensus.push(
+            {
+                caseId: tempRowObject["Case\nId"],
+                censusDate: currentDate,
+                rn: tempRowObject["RN"],
+            }
+        )
+    }
+    return caseCensus
+}
 export function parseExcelFile(cases: any) {
     const columnHeaderIndexes: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY"];
     const caseCensus = []
     const lastCell = cases["!ref"]
     const rowCount = extractRowCount(lastCell)
-    // Object of all hashes we want to link to our database.
-    // const currentCaseCensus: any = {
-    //     "Case\nId": "",
-    //     "Primary Medical Home": "",
-    //     "DOB": "",
-    //     "MTT/RA": "",
-    //     "RN": "",
-    //     "Service \nCode": "",
-    //     "Coverage\nType": "",
-    //     "Age": "",
-    //     "LOS": "",
-    //     "DX": "",
-    //     "Vendor Name": "",
-    //     "Admit Date": "",
-    //     "Last CMDate": "",
-    //     "Not Authorized": "",
-    //     "Last PAD Reason": "",
-    //     "Level of Care": "",
-    //     "Priority Level": "",
-    //     "Review Outcome": "",
-    //     "Review Outcome Reason": "",
-    //     " Entered Date": "",
-    //     "Anticipated Disposition": "",
-    //     "Barriers to Dispo": "",
-    //     "Stability Order Reveived ": "",
-    //     "StabilityOrder-NKF CM Verbal": "",
-    //     "SFT Event": "",
-    //     "SFT Date/Time": "",
-    //     "Last Pertinent Event": "",
-    //     "Stable For Transfer Per OURS MD": "",
-    // }
+
     const currentDate = getCurrentDate(cases["A1"]["v"])
     console.log("All CCR Cases here", cases)
     const allColumnNames: any = {
@@ -213,3 +232,15 @@ export function parseExcelFile(cases: any) {
     }
     return caseCensus
 }
+
+
+// We need to pull all the relevant cases from the same data. As soon as the excel file is loaded up:
+// 1. Retrieve the date for the excel file that was uploaded. 
+// 2. Make SQL inquiry to pull all cases from same date. 
+// 3. Once cases retrieved, loop through retrieved cases and do following:
+// 3a: Find the matching reno number
+// 3b: Change database RN value to corresponding spreadsheet RN value. 
+// 4. After all cases matched, we need to update those cases and push back to database. 
+// 
+
+// Test: make an array of test data with updated values
