@@ -55,3 +55,6 @@ export async function updateAllCases(cases: any[]) {
         console.log("Unable to update cases. Error here", error)
     }
 }
+export async function predictCases(cases: any[]) {
+
+}

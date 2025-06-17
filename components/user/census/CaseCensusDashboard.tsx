@@ -71,6 +71,25 @@ const CaseCensusDashboard = () => {
         setCases(allCases);
         console.log("All combined cases", allCases);
     }
+    async function handleCaseTraining(event: React.ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const binaryData = e.target?.result;
+            if (binaryData) {
+                const workbook = XLSX.read(binaryData, { type: "binary" });
+                const ccrCaseWorksheet = workbook["Sheets"]["Details"]
+                const res = parseExcelForUpdate(ccrCaseWorksheet)
+                if (res) {
+                    setExcelCases(res)
+                    setDate(res[0].censusDate)
+                    toast.success("Excel sheet read correctly. Cases parsed.")
+                }
+            }
+        };
+        reader.readAsBinaryString(file);
+    }
     async function uploadCases() {
         if (cases.length > 1) {
             const newSchedule = await postNewCases(cases)
@@ -114,6 +133,29 @@ const CaseCensusDashboard = () => {
             }
         }
     }
+    async function trainCases() {
+        if (excelCases.length > 1) {
+            toast.success("Trying to train cases ...")
+            const response = await fetch('https://caselearn-production.up.railway.app/predict/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ excelCases }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Prediction request failed');
+            }
+
+            const data = await response.json();
+            console.log("My data here!!!", data)
+            return data;
+
+        } else {
+            toast.error("Error training cases. Check console.")
+        }
+    }
     console.log("Date here", date)
     return (
         <div>
@@ -147,7 +189,20 @@ const CaseCensusDashboard = () => {
                         Update cases
                     </button>
                 </div>
-
+                <div className='bg-slate-500'>
+                    <h1>For training cases</h1>
+                    <input
+                        name='fileUpload'
+                        type="file"
+                        accept=".xlsx,.xls"
+                        onChange={handleCaseTraining}
+                    />
+                    {excelCases.length > 1 && (
+                        <button className='bg-green-400 text-white p-2 rounded-lg' onClick={trainCases}>
+                            Train cases
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     )
