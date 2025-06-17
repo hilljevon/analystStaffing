@@ -135,13 +135,15 @@ const CaseCensusDashboard = () => {
     }
     async function trainCases() {
         if (excelCases.length > 1) {
+            const dataToJson = JSON.stringify({ excelCases })
+            console.log("My to JSON data here", dataToJson)
             toast.success("Trying to train cases ...")
             const response = await fetch('https://caselearn-production.up.railway.app/predict/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ excelCases }),
+                body: dataToJson,
             });
 
             if (!response.ok) {
