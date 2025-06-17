@@ -1,6 +1,6 @@
 "use client"
 import { postNewCases, updateAllCases, retrieveCasesForUpdate } from '@/controllers/cases.controllers';
-import { parseExcelFile, parseExcelForUpdate } from '@/controllers/excel.controllers';
+import { parseExcelFile, parseExcelForTraining, parseExcelForUpdate } from '@/controllers/excel.controllers';
 import React, { useState } from 'react'
 import { toast } from 'sonner';
 import * as XLSX from "xlsx";
@@ -80,7 +80,7 @@ const CaseCensusDashboard = () => {
             if (binaryData) {
                 const workbook = XLSX.read(binaryData, { type: "binary" });
                 const ccrCaseWorksheet = workbook["Sheets"]["Details"]
-                const res = parseExcelForUpdate(ccrCaseWorksheet)
+                const res = parseExcelForTraining(ccrCaseWorksheet)
                 if (res) {
                     setExcelCases(res)
                     setDate(res[0].censusDate)
