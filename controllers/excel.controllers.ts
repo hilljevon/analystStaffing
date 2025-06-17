@@ -366,47 +366,47 @@ export function parseExcelForTraining(cases: any) {
                 serviceCode: tempRowObject["Service \nCode"],
                 coverageType: tempRowObject["Coverage\nType"],
                 // Should be converted to date type
-                dob: convertToDateType(tempRowObject["DOB"]),
+                dob: (tempRowObject["DOB"]),
                 // Should be converted to integer
-                los: parseInt(tempRowObject["LOS"]),
+                los: (tempRowObject["LOS"]),
                 dx: tempRowObject["DX"],
                 inOrOutOfArea: tempRowObject["In Or Out of Area"],
                 vendorName: tempRowObject["Vendor Name"],
                 // Should be converted to date time
-                admitDate: convertDateTimeStringToDateOnly(tempRowObject["Admit Date"]),
+                admitDate: (tempRowObject["Admit Date"]),
                 // Should be converted to date
-                lastReviewDate: convertToDateType(tempRowObject["last review date"]),
+                lastReviewDate: (tempRowObject["last review date"]),
                 // Should be converted to date
-                lastCmDate: convertToDateType(tempRowObject["Last CMDate"]),
+                lastCmDate: (tempRowObject["Last CMDate"]),
                 notAuthorized: tempRowObject["Not Authorized"],
                 lastPadReason: tempRowObject["Last PAD Reason"],
                 // Should be converted to date time
-                padReasonEnteredDate: convertDateTimeStringToDateOnly(tempRowObject["PAD Reason entered date"]),
+                padReasonEnteredDate: (tempRowObject["PAD Reason entered date"]),
                 levelOfCare: tempRowObject["Level of Care"],
                 desk: tempRowObject["Desk"],
                 priorityLevel: tempRowObject["Priority Level"],
                 reviewOutcome: tempRowObject["Review Outcome"],
                 reviewOutcomeReason: tempRowObject["Review Outcome Reason"],
                 // Should be converted to date
-                enteredDate: convertDateTimeStringToDateOnly(tempRowObject[" Entered Date"]),
+                enteredDate: (tempRowObject[" Entered Date"]),
                 anticipatedDisposition: tempRowObject["Anticipated Disposition"],
                 barriersToDisposition: tempRowObject["Barriers to Dispo"],
                 rn2: tempRowObject["RN2"],
-                stabilityOrderReceived: convertDateTimeStringToDateOnly(tempRowObject["Stability Order Reveived "]),
+                stabilityOrderReceived: (tempRowObject["Stability Order Reveived "]),
                 // Should be converted to date time
-                stabilityNkfCmVerbal: convertDateTimeStringToDateOnly(tempRowObject["StabilityOrder-NKF CM Verbal"]),
+                stabilityNkfCmVerbal: (tempRowObject["StabilityOrder-NKF CM Verbal"]),
                 sftEvent: tempRowObject["SFT Event"],
                 // Should be converted to date time
-                sftDateTime: convertDateTimeStringToDateOnly(tempRowObject["SFT Date/Time"]),
+                sftDateTime: (tempRowObject["SFT Date/Time"]),
                 lastPertinentEventDate: tempRowObject["Last Pertinent Event Date"],
                 stablePerOursMd: tempRowObject["Stable For Transfer Per OURS MD"],
                 reason: tempRowObject["Reason"],
                 managingFac: tempRowObject["Managing Fac"],
                 // Should be converted to date
-                authStartDate: convertToDateType(tempRowObject["Authorization Start Date"]),
+                authStartDate: (tempRowObject["Authorization Start Date"]),
                 // Should be converted to date
-                authEndDate: convertToDateType(tempRowObject["Authorization End Date"]),
-                lastReviewRequired: convertToDateType(tempRowObject["Last Review Required By Date"]),
+                authEndDate: (tempRowObject["Authorization End Date"]),
+                lastReviewRequired: (tempRowObject["Last Review Required By Date"]),
             }
         )
     }
