@@ -213,7 +213,7 @@ const CaseCensusDashboard = () => {
                         </button>
                     )}
                     {trainedData && (
-                        <button onClick={downloadTrainedData} className='bg-purple-400 text-white'>
+                        <button onClick={downloadTrainedData} className='bg-purple-400 text-white m-2 p-2 rounded-lg'>
                             Download
                         </button>
                     )}
