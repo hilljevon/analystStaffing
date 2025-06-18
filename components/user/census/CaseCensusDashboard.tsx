@@ -9,6 +9,7 @@ const CaseCensusDashboard = () => {
     const [excelCases, setExcelCases] = useState<any[]>([
 
     ])
+    const [trainedData, setTrainedData] = useState<any>()
     const [cases, setCases] = useState<any[]>([])
     const [date, setDate] = useState<any>("")
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,18 +153,26 @@ const CaseCensusDashboard = () => {
 
             const data = await response.json();
             console.log("My data here!!!", data)
-            return data;
+            if (data) {
+                toast.success("Model successfully trained!!!")
+                setTrainedData(data)
+            }
 
         } else {
             toast.error("Error training cases. Check console.")
         }
     }
-    console.log("Date here", date)
+    const downloadTrainedData = () => {
+        const worksheet = XLSX.utils.json_to_sheet(trainedData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+        XLSX.writeFile(workbook, "trained_data.xlsx");
+    }
     return (
         <div>
             <div className="flex items-center w-full justify-center">
                 {/* For UPLOADING cases */}
-                <div className=''>
+                {/* <div className=''>
                     <label className='font-bold mx-2' htmlFor="fileUpload">Upload cases</label>
                     <input
                         name='fileUpload'
@@ -171,15 +180,14 @@ const CaseCensusDashboard = () => {
                         accept=".xlsx,.xls"
                         onChange={handleFileUpload}
                         multiple
-                    />
-                    {cases.length > 1 && (
+                    /> */}
+                {/* {cases.length > 1 && (
                         <button className='bg-green-400 text-white p-2 rounded-lg' onClick={uploadCases}>
                             Upload
                         </button>
-                    )}
-                </div>
-                <div>
-                    {/* For UPDATING cases */}
+                    )} */}
+                {/* </div> */}
+                {/* <div>
                     <label className='font-bold mx-2 underline' htmlFor="updateCases">Update Cases</label>
                     <input
                         name='updateCases'
@@ -190,8 +198,8 @@ const CaseCensusDashboard = () => {
                     <button onClick={getCases} className='border bg-green-500 p-2 rounded-lg'>
                         Update cases
                     </button>
-                </div>
-                <div className='bg-slate-500'>
+                </div> */}
+                <div className=''>
                     <h1>For training cases</h1>
                     <input
                         name='fileUpload'
@@ -202,6 +210,11 @@ const CaseCensusDashboard = () => {
                     {excelCases.length > 1 && (
                         <button className='bg-green-400 text-white p-2 rounded-lg' onClick={trainCases}>
                             Train cases
+                        </button>
+                    )}
+                    {trainedData && (
+                        <button onClick={downloadTrainedData} className='bg-purple-400 text-white'>
+                            Download
                         </button>
                     )}
                 </div>

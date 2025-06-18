@@ -425,7 +425,7 @@ const page = async () => {
     })
     return (
         <>
-            <header className="top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
+            {/* <header className="top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
                 <h1 className="text-xl font-semibold">Trends</h1>
             </header>
             <div className="gap-4 p-4 pt-0">
@@ -440,7 +440,7 @@ const page = async () => {
                         <OTAnalystBarChart allSchedules={reformattedSchedules} title={"scheduledAnalysts"} chartConfig={scheduledChartConfig} />
                     </div>
                 </div>
-            </div>
+            </div> */}
 
         </>
     )
