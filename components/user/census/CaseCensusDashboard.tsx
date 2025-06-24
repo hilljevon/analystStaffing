@@ -172,12 +172,13 @@ const CaseCensusDashboard = () => {
             if (data) {
                 toast.success("Model successfully trained!!!")
                 setTrainedData(data)
-                console.log("My trained data here", trainedData)
+
             }
         } else {
             toast.error("Error training cases. Check console.")
         }
     }
+    console.log("My trained data here", trainedData)
     const downloadTrainedData = () => {
         const worksheet = XLSX.utils.json_to_sheet(trainedData);
         const workbook = XLSX.utils.book_new();
@@ -188,6 +189,7 @@ const CaseCensusDashboard = () => {
         if (trainedData && trueCases) {
             const dataToJson = JSON.stringify({ trainedCases: trainedData, trueCases: trueCases })
             toast.success("Trying to train cases ...")
+            console.log("My data to JSON that i am sending", dataToJson)
             const response = await fetch('https://caselearn-production.up.railway.app/compare/', {
                 method: 'POST',
                 headers: {
