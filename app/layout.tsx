@@ -16,8 +16,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Analyst Staffing",
-  description: "Analyst OT Staffing",
+  title: "Case Learn",
+  description: "Case AI",
 };
 
 export default function RootLayout({
