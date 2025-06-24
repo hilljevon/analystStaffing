@@ -147,6 +147,7 @@ const CaseCensusDashboard = () => {
                 if (res) {
                     setTrueCases(res)
                     toast.success("Excel sheet read correctly. Cases parsed.")
+                    console.log("My true cases here", res)
                 }
             }
         };
@@ -171,6 +172,7 @@ const CaseCensusDashboard = () => {
             if (data) {
                 toast.success("Model successfully trained!!!")
                 setTrainedData(data)
+                console.log("My trained data here", trainedData)
             }
         } else {
             toast.error("Error training cases. Check console.")
