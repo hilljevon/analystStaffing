@@ -277,46 +277,40 @@ const CaseCensusDashboard = () => {
                             Analyze
                         </button>
                         {metrics && (
-                            <table>
-                                <thead>
+                            <table className="min-w-full border border-gray-300 rounded-lg overflow-hidden text-sm">
+                                <thead className="bg-gray-100">
                                     <tr>
-                                        <th> Metrics</th>
-                                        <th>Values</th>
-                                        <th>Interpretation</th>
+                                        <th className="px-4 py-2 text-left border-b border-gray-300 font-semibold">Metrics</th>
+                                        <th className="px-4 py-2 text-left border-b border-gray-300 font-semibold">Values</th>
+                                        <th className="px-4 py-2 text-left border-b border-gray-300 font-semibold">Interpretation</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="bg-white divide-y divide-gray-200">
                                     <tr>
-                                        <td> Accuracy </td>
-                                        <td> {metrics.accuracy}% </td>
-                                        <td>
+                                        <td className="px-4 py-3">Accuracy</td>
+                                        <td className="px-4 py-3">{metrics.accuracy}%</td>
+                                        <td className="px-4 py-3">
                                             Out of all cases, {metrics.accuracy}% were classified correctly between assigned and not assigned.
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Precision</td>
-                                        <td>
-                                            {metrics.precision}
-                                        </td>
-                                        <td>
+                                        <td className="px-4 py-3">Precision</td>
+                                        <td className="px-4 py-3">{metrics.precision}%</td>
+                                        <td className="px-4 py-3">
                                             Of all the cases the model predicted to assign, {metrics.precision}% were actually assigned.
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Recall</td>
-                                        <td>
-                                            {metrics.recall}
-                                        </td>
-                                        <td>
+                                        <td className="px-4 py-3">Recall</td>
+                                        <td className="px-4 py-3">{metrics.recall}%</td>
+                                        <td className="px-4 py-3">
                                             Of all true assigned cases, the model caught {metrics.recall}% of them.
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>F1 Score</td>
-                                        <td>
-                                            {metrics.f1}
-                                        </td>
-                                        <td>
+                                        <td className="px-4 py-3">F1 Score</td>
+                                        <td className="px-4 py-3">{metrics.f1}%</td>
+                                        <td className="px-4 py-3">
                                             Harmonic mean between accuracy and precision.
                                         </td>
                                     </tr>
