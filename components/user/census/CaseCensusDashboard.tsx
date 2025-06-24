@@ -5,14 +5,20 @@ import React, { useState } from 'react'
 import { toast } from 'sonner';
 import * as XLSX from "xlsx";
 
-const CaseCensusDashboard = () => {
-    const [excelCases, setExcelCases] = useState<any[]>([
+interface MetricsInterface {
+    accuracy: number,
+    precision: number,
+    recall: number,
+    f1: number
+}
 
-    ])
+const CaseCensusDashboard = () => {
+    const [excelCases, setExcelCases] = useState<any[]>([])
     const [trainedData, setTrainedData] = useState<any>()
     const [cases, setCases] = useState<any[]>([])
     const [date, setDate] = useState<any>("")
     const [trueCases, setTrueCases] = useState<any[]>()
+    const [metrics, setMetrics] = useState<MetricsInterface | null>(null)
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDate(e.target.value)
     }
@@ -204,6 +210,7 @@ const CaseCensusDashboard = () => {
             if (data) {
                 toast.success("Model successfully trained!!!")
                 console.log("Data here!", data)
+                setMetrics(data)
             }
         }
     }
@@ -269,6 +276,53 @@ const CaseCensusDashboard = () => {
                         <button onClick={crossReferenceData} className='bg-blue-600 p-2 m-2'>
                             Analyze
                         </button>
+                        {metrics && (
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th> Metrics</th>
+                                        <th>Values</th>
+                                        <th>Interpretation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td> Accuracy </td>
+                                        <td> {metrics.accuracy}% </td>
+                                        <td>
+                                            Out of all cases, {metrics.accuracy}% were classified correctly between assigned and not assigned.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Precision</td>
+                                        <td>
+                                            {metrics.precision}
+                                        </td>
+                                        <td>
+                                            Of all the cases the model predicted to assign, {metrics.precision}% were actually assigned.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Recall</td>
+                                        <td>
+                                            {metrics.recall}
+                                        </td>
+                                        <td>
+                                            Of all true assigned cases, the model caught {metrics.recall}% of them.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>F1 Score</td>
+                                        <td>
+                                            {metrics.f1}
+                                        </td>
+                                        <td>
+                                            Harmonic mean between accuracy and precision.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        )}
                     </div>
                 )}
             </div>
