@@ -143,7 +143,7 @@ const CaseCensusDashboard = () => {
             if (binaryData) {
                 const workbook = XLSX.read(binaryData, { type: "binary" });
                 const ccrCaseWorksheet = workbook["Sheets"]["Details"]
-                const res = parseExcelForTraining(ccrCaseWorksheet)
+                const res = parseExcelForUpdate(ccrCaseWorksheet)
                 if (res) {
                     setTrueCases(res)
                     toast.success("Excel sheet read correctly. Cases parsed.")
