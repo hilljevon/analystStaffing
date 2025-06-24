@@ -12,6 +12,7 @@ const CaseCensusDashboard = () => {
     const [trainedData, setTrainedData] = useState<any>()
     const [cases, setCases] = useState<any[]>([])
     const [date, setDate] = useState<any>("")
+    const [trueCases, setTrueCases] = useState<any[]>()
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDate(e.target.value)
     }
@@ -102,7 +103,6 @@ const CaseCensusDashboard = () => {
             console.log("Unable to post new case. Cases not available")
         }
     }
-    console.log("My excel cases here", excelCases)
     // Test instance of database updates. Test cases represents our excel parse.
     const getCases = async () => {
         const dbCases = await retrieveCasesForUpdate(date)
@@ -134,6 +134,24 @@ const CaseCensusDashboard = () => {
             }
         }
     }
+    async function retrieveTrueCases(event: React.ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const binaryData = e.target?.result;
+            if (binaryData) {
+                const workbook = XLSX.read(binaryData, { type: "binary" });
+                const ccrCaseWorksheet = workbook["Sheets"]["Details"]
+                const res = parseExcelForTraining(ccrCaseWorksheet)
+                if (res) {
+                    setTrueCases(res)
+                    toast.success("Excel sheet read correctly. Cases parsed.")
+                }
+            }
+        };
+        reader.readAsBinaryString(file);
+    }
     async function trainCases() {
         if (excelCases.length > 1) {
             const dataToJson = JSON.stringify({ cases: excelCases })
@@ -146,18 +164,14 @@ const CaseCensusDashboard = () => {
                 },
                 body: dataToJson,
             });
-
             if (!response.ok) {
                 throw new Error('Prediction request failed');
             }
-
             const data = await response.json();
-            console.log("My data here!!!", data)
             if (data) {
                 toast.success("Model successfully trained!!!")
                 setTrainedData(data)
             }
-
         } else {
             toast.error("Error training cases. Check console.")
         }
@@ -167,6 +181,27 @@ const CaseCensusDashboard = () => {
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
         XLSX.writeFile(workbook, "trained_data.xlsx");
+    }
+    const crossReferenceData = async () => {
+        if (trainedData && trueCases) {
+            const dataToJson = JSON.stringify({ trainedCases: trainedData, trueCases: trueCases })
+            toast.success("Trying to train cases ...")
+            const response = await fetch('https://caselearn-production.up.railway.app/compare/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: dataToJson,
+            });
+            if (!response.ok) {
+                throw new Error('Prediction request failed');
+            }
+            const data = await response.json();
+            if (data) {
+                toast.success("Model successfully trained!!!")
+                console.log("Data here!", data)
+            }
+        }
     }
     return (
         <div>
@@ -218,6 +253,20 @@ const CaseCensusDashboard = () => {
                         </button>
                     )}
                 </div>
+                {trainedData && (
+                    <div>
+                        <h1>Cross reference</h1>
+                        <input
+                            name='fileUpload'
+                            type="file"
+                            accept=".xlsx,.xls"
+                            onChange={retrieveTrueCases}
+                        />
+                        <button onClick={crossReferenceData} className='bg-blue-600 p-2 m-2'>
+                            Analyze
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     )
