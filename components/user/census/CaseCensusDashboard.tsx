@@ -345,14 +345,14 @@ const CaseCensusDashboard = () => {
                             <td className="px-4 py-3">Precision</td>
                             <td className="px-4 py-3">{metrics.precision}%</td>
                             <td className="px-4 py-3">
-                                Of all the cases the model chose to assign, {metrics.precision}% were actually supposed to be assigned. {100 - metrics.precision}% were assigned by the model that should not have been assigned.
+                                Of all the cases the model chose to assign, {metrics.precision}% were actually supposed to be assigned. {Math.floor(100 - metrics.precision)}% were assigned by the model that should not have been assigned.
                             </td>
                         </tr>
                         <tr>
                             <td className="px-4 py-3">Recall</td>
                             <td className="px-4 py-3">{metrics.recall}%</td>
                             <td className="px-4 py-3">
-                                Of all the cases that were supposed to be assigned, the model caught {metrics.recall}% of them. {100 - metrics.recall}% that were actually assigned were not caught by the model.
+                                Of all the cases that were supposed to be assigned, the model caught {metrics.recall}% of them. {Math.floor(100 - metrics.recall)}% that were assigned were not caught by the model.
                             </td>
                         </tr>
                         <tr>
