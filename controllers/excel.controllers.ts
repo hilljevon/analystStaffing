@@ -410,7 +410,7 @@ export function parseExcelForTraining(cases: any) {
             }
         )
     }
-    return caseCensus
+    return { caseCensus, allColumnNames }
 }
 
 // We need to pull all the relevant cases from the same data. As soon as the excel file is loaded up:
