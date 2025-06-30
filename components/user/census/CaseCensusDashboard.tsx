@@ -352,7 +352,7 @@ const CaseCensusDashboard = () => {
                             <td className="px-4 py-3">Recall</td>
                             <td className="px-4 py-3">{metrics.recall}%</td>
                             <td className="px-4 py-3">
-                                Of all the cases that were supposed to be assigned, the model caught {metrics.recall}% of them. {Math.floor(100 - metrics.recall)}% that were assigned were not caught by the model.
+                                Of all the cases that were supposed to be assigned, the model caught {metrics.recall}% of them. {Math.floor(100 - metrics.recall)}% that was assigned by management was not assigned by the model.
                             </td>
                         </tr>
                         <tr>
