@@ -338,21 +338,21 @@ const CaseCensusDashboard = () => {
                             <td className="px-4 py-3">Accuracy</td>
                             <td className="px-4 py-3">{metrics.accuracy}%</td>
                             <td className="px-4 py-3">
-                                Out of all cases, {metrics.accuracy}% were classified correctly between assigned and not assigned. Accuracy measures the overall percentage of total cases where the model made the correct decision between assigning and not assigning.
+                                Out of all cases, <b> {metrics.accuracy}%</b>were classified correctly between assigned and not assigned. Accuracy measures overall percentage between assigning and not assigning.
                             </td>
                         </tr>
                         <tr>
                             <td className="px-4 py-3">Precision</td>
                             <td className="px-4 py-3">{metrics.precision}%</td>
                             <td className="px-4 py-3">
-                                Of all the cases the model chose to assign, {metrics.precision}% were actually supposed to be assigned. {Math.floor(100 - metrics.precision)}% were assigned by the model that should not have been assigned.
+                                Out of all the cases the model assigned, <b>{metrics.precision}% </b>  were supposed to be assigned. <b> ~{Math.floor(100 - metrics.precision)}% </b> <u> were assigned </u> by the model that <u> should not have been assigned </u>.
                             </td>
                         </tr>
                         <tr>
                             <td className="px-4 py-3">Recall</td>
                             <td className="px-4 py-3">{metrics.recall}%</td>
                             <td className="px-4 py-3">
-                                Of all the cases that were supposed to be assigned, the model caught {metrics.recall}% of them. {Math.floor(100 - metrics.recall)}% that was assigned by management was not assigned by the model.
+                                Of all the cases that were supposed to be assigned, the model caught <b> {metrics.recall}% </b> of them. {Math.floor(100 - metrics.recall)}% that <u> were </u> assigned by management <u> were  <b>not</b></u> assigned by the model.
                             </td>
                         </tr>
                         <tr>
