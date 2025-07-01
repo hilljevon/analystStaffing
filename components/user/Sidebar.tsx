@@ -26,21 +26,21 @@ import Link from "next/link";
 import { TooltipProvider } from "@radix-ui/react-tooltip"
 import { usePathname } from 'next/navigation'
 const sidebarItems = [
-  {
-    href: "/",
-    label: "History",
-    icon: HomeIcon
-  },
-  {
-    href: "/addschedule",
-    label: "Add Schedule",
-    icon: PlusSquare
-  },
-  {
-    href: "/trends",
-    label: "Trends",
-    icon: TrendingUp
-  },
+  // {
+  //   href: "/",
+  //   label: "History",
+  //   icon: HomeIcon
+  // },
+  // {
+  //   href: "/addschedule",
+  //   label: "Add Schedule",
+  //   icon: PlusSquare
+  // },
+  // {
+  //   href: "/trends",
+  //   label: "Trends",
+  //   icon: TrendingUp
+  // },
   {
     href: "/census",
     label: "Census",

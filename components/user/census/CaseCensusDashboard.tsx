@@ -294,9 +294,9 @@ const CaseCensusDashboard = () => {
                         accept=".xlsx,.xls"
                         onChange={parsePreExcelAssignedCases}
                     />
-                    <button className='bg-red-300 text-white p-2 m-2 rounded-lg' onClick={testExcelCopy}>
+                    {/* <button className='bg-red-300 text-white p-2 m-2 rounded-lg' onClick={testExcelCopy}>
                         Test
-                    </button>
+                    </button> */}
                     {excelCases.length > 1 && (
                         <button className='bg-green-400 text-white p-2 rounded-lg' onClick={trainCases}>
                             Train cases
